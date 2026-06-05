@@ -212,6 +212,101 @@
     .login-card.shake { animation: shake 0.45s var(--ease); }
 
     .hidden { display: none !important; }
+
+    /* ============ ENHANCED MOTION + AMBIENCE (LOCK SCREEN) ============ */
+
+    /* Animated mesh background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -20%;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 22%, rgba(10, 132, 255, 0.22) 0%, transparent 38%),
+        radial-gradient(circle at 80% 72%, rgba(125, 80, 240, 0.20) 0%, transparent 38%),
+        radial-gradient(circle at 60% 28%, rgba(255, 80, 180, 0.10) 0%, transparent 32%),
+        radial-gradient(circle at 30% 88%, rgba(80, 200, 255, 0.14) 0%, transparent 32%);
+      animation: meshDrift 32s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    @keyframes meshDrift {
+      0%   { transform: translate3d(0%, 0%, 0) rotate(0deg) scale(1); }
+      33%  { transform: translate3d(-3%, 2%, 0) rotate(8deg) scale(1.06); }
+      66%  { transform: translate3d(2%, -3%, 0) rotate(-6deg) scale(0.98); }
+      100% { transform: translate3d(-1%, 1%, 0) rotate(4deg) scale(1.03); }
+    }
+
+    /* Film grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.04;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    }
+
+    /* Login card spring entrance */
+    .login-card {
+      animation: cardSpringIn 0.7s cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+      animation-delay: 0.1s;
+    }
+    @keyframes cardSpringIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.92); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Avatar subtle breathing pulse */
+    .avatar {
+      transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    }
+    .avatar:hover {
+      transform: scale(1.04);
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(10, 132, 255, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    }
+
+    /* Soft glow ring around the login card */
+    .login-card::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg,
+        rgba(10, 132, 255, 0.3),
+        transparent 30%,
+        transparent 70%,
+        rgba(125, 80, 240, 0.3));
+      z-index: -1;
+      opacity: 0.5;
+      filter: blur(8px);
+      animation: glowPulse 6s ease-in-out infinite alternate;
+    }
+    .login-card {
+      position: relative;
+    }
+    @keyframes glowPulse {
+      0%   { opacity: 0.3; }
+      100% { opacity: 0.7; }
+    }
+
+    /* Input focus glow */
+    #staticrypt-password:focus {
+      box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.15);
+    }
+
+    /* Smooth submit button hover */
+    .staticrypt-decrypt-button {
+      transition: transform 0.18s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.18s var(--ease);
+    }
+    .staticrypt-decrypt-button:hover {
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
+    }
   </style>
 </head>
 
