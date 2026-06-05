@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="staticrypt-html" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>/*[|template_title|]*/0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="cache-control" content="max-age=0" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000;
+      --surface: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.10);
+      --border-strong: rgba(255, 255, 255, 0.18);
+      --text: #f5f5f7;
+      --text-dim: #a1a1a6;
+      --text-dimmer: #6e6e73;
+      --accent: #0a84ff;
+      --danger: #ff453a;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 20% 10%, rgba(10, 132, 255, 0.10) 0%, transparent 45%),
+        radial-gradient(circle at 80% 90%, rgba(125, 80, 240, 0.08) 0%, transparent 45%),
+        #000;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    /* Loading spinner */
+    .staticrypt-spinner-container {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .staticrypt-spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-top-color: var(--text);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Main content wrapper */
+    .staticrypt-content {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      animation: fadeIn 0.4s var(--ease);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Login card */
+    .login-card {
+      width: 100%;
+      max-width: 360px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 40px 32px 32px;
+      text-align: center;
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    }
+
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #4a4a4f 0%, #1d1d1f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    }
+
+    .user-name {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+
+    .user-hint {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+      font-weight: 400;
+    }
+
+    /* Form */
+    #staticrypt-form { margin: 0; }
+
+    .staticrypt-password-container {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    #staticrypt-password {
+      width: 100%;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 15px;
+      padding: 0 48px 0 18px;
+      outline: none;
+      text-align: center;
+      letter-spacing: 4px;
+      transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    }
+
+    #staticrypt-password::placeholder {
+      color: var(--text-dimmer);
+      letter-spacing: 0;
+    }
+
+    #staticrypt-password:focus {
+      border-color: var(--accent);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Hide Staticrypt's default password-visibility toggle (kept in DOM for JS compat) */
+    .staticrypt-toggle-password-visibility { display: none !important; }
+
+    /* Hide Staticrypt's remember-me checkbox (kept in DOM for JS compat) */
+    .staticrypt-remember { display: none !important; }
+
+    /* Submit button — Apple-style arrow */
+    .staticrypt-decrypt-button {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--text);
+      border: none;
+      color: #000;
+      cursor: pointer;
+      font-size: 0;
+      transition: transform 0.15s var(--ease), background 0.15s var(--ease);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14M13 5l7 7-7 7'/></svg>");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 16px 16px;
+    }
+
+    .staticrypt-decrypt-button:hover { transform: scale(1.05); }
+    .staticrypt-decrypt-button:active { transform: scale(0.95); }
+
+    /* Inline error message */
+    .err {
+      font-size: 12px;
+      color: var(--danger);
+      height: 16px;
+      margin-top: 8px;
+      opacity: 0;
+      transition: opacity 0.2s var(--ease);
+    }
+    .err.show { opacity: 1; }
+
+    /* Shake animation */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+    .login-card.shake { animation: shake 0.45s var(--ease); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+
+<body class="staticrypt-body">
+
+  <div id="staticrypt_loading" class="staticrypt-spinner-container">
+    <div class="staticrypt-spinner"></div>
+  </div>
+
+  <div id="staticrypt_content" class="staticrypt-content hidden">
+    <div class="login-card" id="loginCard">
+      <div class="avatar">A</div>
+      <div class="user-name">alex</div>
+      <div class="user-hint">/*[|template_instructions|]*/0</div>
+
+      <form id="staticrypt-form" action="#" method="post">
+        <div class="staticrypt-password-container">
+          <input
+            id="staticrypt-password"
+            type="password"
+            name="password"
+            placeholder="/*[|template_placeholder|]*/0"
+            autocomplete="off"
+            autofocus
+          />
+          <img
+            class="staticrypt-toggle-password-visibility"
+            alt=""
+            src="data:image/svg+xml;utf8,<svg/>"
+          />
+          <button type="submit" class="staticrypt-decrypt-button" aria-label="/*[|template_button|]*/0"></button>
+        </div>
+
+        <label id="staticrypt-remember-label" class="staticrypt-remember hidden">
+          <input id="staticrypt-remember" type="checkbox" name="remember" />
+          /*[|template_remember|]*/0
+        </label>
+      </form>
+
+      <div class="err" id="errMsg">Incorrect password</div>
+    </div>
+  </div>
+
+  <script>
+    const staticryptInitiator = /*[|js_staticrypt|]*/ 0;
+    const templateError = "/*[|template_error|]*/0",
+          templateToggleAltShow = "",
+          templateToggleAltHide = "",
+          isRememberEnabled = /*[|is_remember_enabled|]*/ 0,
+          staticryptConfig = /*[|staticrypt_config|]*/ 0;
+
+    const templateConfig = {
+      rememberExpirationKey: "staticrypt_expiration",
+      rememberPassphraseKey: "staticrypt_passphrase",
+      replaceHtmlCallback: null,
+      clearLocalStorageCallback: null,
+    };
+
+    const staticrypt = staticryptInitiator.init(staticryptConfig, templateConfig);
+
+    window.onload = async function () {
+      const { isSuccessful } = await staticrypt.handleDecryptOnLoad();
+      if (!isSuccessful) {
+        document.getElementById("staticrypt_loading").classList.add("hidden");
+        document.getElementById("staticrypt_content").classList.remove("hidden");
+        document.getElementById("staticrypt-password").focus();
+      }
+    };
+
+    document.getElementById("staticrypt-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const password = document.getElementById("staticrypt-password").value;
+      const { isSuccessful } = await staticrypt.handleDecryptionOfPage(password, false);
+      if (!isSuccessful) {
+        const card = document.getElementById("loginCard");
+        const err  = document.getElementById("errMsg");
+        err.classList.add("show");
+        card.classList.add("shake");
+        setTimeout(() => card.classList.remove("shake"), 500);
+        const input = document.getElementById("staticrypt-password");
+        input.select();
+      }
+    });
+  </script>
+</body>
+</html>
