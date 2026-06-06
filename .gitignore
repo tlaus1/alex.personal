@@ -2,3 +2,7 @@
 node_modules/
 encrypted/
 index.source.html
+index 2.html
+supabase/.temp/
+template-inner.html
+*.bak
