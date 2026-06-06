@@ -310,9 +310,6 @@
       box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
     }
 
-    /* ============ DECOY: fake GitHub Pages 404 ============
-       Sits on top of everything by default. Press "0" five times
-       (or tap the "404" five times on mobile) to reveal the real page. */
     .gh-404 {
       position: fixed;
       inset: 0;
@@ -390,7 +387,6 @@
 
 <body class="staticrypt-body">
 
-  <!-- DECOY: fake GitHub Pages 404. Hidden when user presses "0" 5x or taps the title 5x -->
   <div id="gh404" class="gh-404">
     <h1 id="gh404h">404</h1>
     <div class="gh-lead">There isn't a GitHub Pages site here.</div>
@@ -409,33 +405,33 @@
   </div>
 
   <script>
-    // Decoy reveal — press "0" five times (desktop) OR tap "404" five times (mobile).
     (function () {
-      var zeroCount = 0, tapCount = 0, zeroTimer = null, tapTimer = null;
-      function reveal() {
-        var el = document.getElementById('gh404');
-        if (!el) return;
-        el.classList.add('fade');
-        setTimeout(function () { el.style.display = 'none'; }, 260);
+      var _a = 0, _b = 0, _t1 = null, _t2 = null;
+      var _k = 48, _n = 5, _w = 2500;
+      function _r() {
+        var x = document.getElementById('gh404');
+        if (!x) return;
+        x.classList.add('fade');
+        setTimeout(function () { x.style.display = 'none'; }, 260);
       }
       document.addEventListener('keydown', function (e) {
-        if (e.key === '0' || e.code === 'Digit0' || e.code === 'Numpad0') {
-          zeroCount++;
-          clearTimeout(zeroTimer);
-          if (zeroCount >= 5) { zeroCount = 0; reveal(); return; }
-          zeroTimer = setTimeout(function () { zeroCount = 0; }, 2500);
+        if ((e.keyCode || e.which) === _k && !e.shiftKey) {
+          _a++;
+          clearTimeout(_t1);
+          if (_a >= _n) { _a = 0; _r(); return; }
+          _t1 = setTimeout(function () { _a = 0; }, _w);
         } else {
-          zeroCount = 0;
-          clearTimeout(zeroTimer);
+          _a = 0;
+          clearTimeout(_t1);
         }
       });
-      var h1 = document.getElementById('gh404h');
-      if (h1) {
-        h1.addEventListener('click', function () {
-          tapCount++;
-          clearTimeout(tapTimer);
-          if (tapCount >= 5) { tapCount = 0; reveal(); return; }
-          tapTimer = setTimeout(function () { tapCount = 0; }, 2500);
+      var _h = document.getElementById('gh404h');
+      if (_h) {
+        _h.addEventListener('click', function () {
+          _b++;
+          clearTimeout(_t2);
+          if (_b >= _n) { _b = 0; _r(); return; }
+          _t2 = setTimeout(function () { _b = 0; }, _w);
         });
       }
     })();

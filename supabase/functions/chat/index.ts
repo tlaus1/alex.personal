@@ -8,12 +8,11 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 // If unset, the gate is disabled (so the function still works during setup).
 const DASHBOARD_TOKEN = Deno.env.get("DASHBOARD_TOKEN") ?? "";
 
-// Origins allowed to call this function. Add/remove as your domains change.
-const ALLOWED_ORIGINS = [
-  "https://alexfun.is-a.dev",
-  "https://alexpersonal.is-a.dev",
-  "https://tlaus1.github.io",
-];
+// CORS is NOT the security boundary here — the DASHBOARD_TOKEN header is.
+// So we reflect whatever Origin calls us, which means the dashboard works from
+// any domain (alexfun.is-a.dev, alexpersonal.is-a.dev, tlaus1.github.io, local
+// preview, etc.) without maintaining an allow-list. A caller still needs the
+// secret token to actually use the function.
 
 // Models the dashboard is allowed to request. Guards against someone tampering
 // with the client to request an arbitrary (expensive) model string.
@@ -24,11 +23,10 @@ const ALLOWED_MODELS = new Set([
 ]);
 
 function corsHeaders(origin: string | null): HeadersInit {
-  const allowed = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
-    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Origin": origin || "*",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, x-dashboard-token",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
