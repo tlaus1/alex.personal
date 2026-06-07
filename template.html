@@ -314,73 +314,50 @@
       position: fixed;
       inset: 0;
       z-index: 2147483647;
-      background: #f6f8fa;
-      color: #24292f;
+      background: #f1f1f1;
+      color: #000;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 13vh 24px 24px;
-      text-align: center;
+      overflow: auto;
       cursor: default;
-      -webkit-font-smoothing: antialiased;
-      animation: none;
     }
     .gh-404.fade {
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease;
     }
+    .gh-404 .container {
+      margin: 50px auto 40px auto;
+      width: 600px;
+      text-align: center;
+    }
     .gh-404 h1 {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 60px;
-      font-weight: 100;
+      width: 800px;
+      position: relative;
+      left: -100px;
       letter-spacing: -1px;
       line-height: 60px;
+      font-size: 60px;
+      font-weight: 100;
       margin: 0 0 50px 0;
       text-shadow: 0 1px 0 #fff;
-      color: #1f2328;
       user-select: none;
     }
-    .gh-404 .gh-lead {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 16px;
-      color: #1f2328;
-    }
     .gh-404 p {
-      font-size: 14px;
-      line-height: 1.5;
-      max-width: 520px;
-      color: #1f2328;
-      margin: 0 0 28px;
+      color: rgba(0, 0, 0, 0.5);
+      margin: 20px 0;
+      line-height: 1.6;
     }
-    .gh-404 a {
-      color: #0969da;
-      text-decoration: none;
-    }
+    .gh-404 a { color: #4183c4; text-decoration: none; }
     .gh-404 a:hover { text-decoration: underline; }
-    .gh-404 .gh-status {
-      font-size: 14px;
-      color: #57606a;
-    }
-    .gh-404 .gh-status a { color: #1f2328; text-decoration: none; }
-    .gh-404 .gh-status a:hover { text-decoration: underline; }
-    .gh-404 .gh-sep {
-      display: inline-block;
-      margin: 0 10px;
-      color: #d0d7de;
-    }
     .gh-404 .gh-mark {
       width: 32px;
       height: 32px;
-      margin-top: 28px;
-      color: #d0d7de;
+      margin-top: 20px;
+      opacity: 0.4;
     }
-    @media (max-width: 480px) {
-      .gh-404 { padding-top: 8vh; }
-      .gh-404 h1 { font-size: 64px; }
+    @media (max-width: 640px) {
+      .gh-404 .container { width: auto; margin: 50px 20px 40px; }
+      .gh-404 h1 { width: auto; left: 0; }
     }
   </style>
 </head>
@@ -388,20 +365,21 @@
 <body class="staticrypt-body">
 
   <div id="gh404" class="gh-404">
-    <h1 id="gh404h">404</h1>
-    <div class="gh-lead">There isn't a GitHub Pages site here.</div>
-    <p>
-      If you're trying to publish one, <a href="https://docs.github.com/pages" target="_blank" rel="noopener">read the full documentation</a>
-      to learn how to set up <strong>GitHub Pages</strong> for your repository, organization, or user account.
-    </p>
-    <div class="gh-status">
-      <a href="https://www.githubstatus.com" target="_blank" rel="noopener">GitHub Status</a>
-      <span class="gh-sep">—</span>
-      <a href="https://twitter.com/githubstatus" target="_blank" rel="noopener">@githubstatus</a>
+    <div class="container">
+      <h1 id="gh404h">404</h1>
+      <p><strong>There isn't a GitHub Pages site here.</strong></p>
+      <p>
+        If you're trying to publish one, <a href="https://docs.github.com/pages" target="_blank" rel="noopener">read the full documentation</a>
+        to learn how to set up <strong>GitHub Pages</strong> for your repository, organization, or user account.
+      </p>
+      <p>
+        <a href="https://www.githubstatus.com" target="_blank" rel="noopener">GitHub Status</a>
+        &mdash; <a href="https://twitter.com/githubstatus" target="_blank" rel="noopener">@githubstatus</a>
+      </p>
+      <svg class="gh-mark" viewBox="0 0 16 16" fill="#000" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
     </div>
-    <svg class="gh-mark" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-    </svg>
   </div>
 
   <script>
