@@ -17,6 +17,7 @@ const DASHBOARD_TOKEN = Deno.env.get("DASHBOARD_TOKEN") ?? "";
 // Models the dashboard is allowed to request. Guards against someone tampering
 // with the client to request an arbitrary (expensive) model string.
 const ALLOWED_MODELS = new Set([
+  "claude-fable-5",
   "claude-opus-4-8",
   "claude-sonnet-4-6",
   "claude-haiku-4-5-20251001",
