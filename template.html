@@ -314,48 +314,80 @@
       position: fixed;
       inset: 0;
       z-index: 2147483647;
-      background: #f1f1f1;
-      color: #000;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       overflow: auto;
       cursor: default;
+      font-family: system-ui, sans-serif;
+      font-size: 15px;
+      --background-color: #fff;
+      --text-color: rgb(95, 99, 104);
+      --heading-color: rgb(32, 33, 36);
+      --error-code-color: rgb(95, 99, 104);
+      --icon-color: rgb(128, 134, 139);
+      --btn-fill: rgb(26, 115, 232);
+      --btn-text: #fff;
+      background: var(--background-color);
+      color: var(--text-color);
     }
-    .gh-404.fade {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
+    @media (prefers-color-scheme: dark) {
+      .gh-404 {
+        --background-color: rgb(32, 33, 36);
+        --text-color: rgb(154, 160, 166);
+        --heading-color: rgb(154, 160, 166);
+        --error-code-color: rgb(154, 160, 166);
+        --icon-color: rgb(154, 160, 166);
+        --btn-fill: rgb(138, 180, 248);
+        --btn-text: rgb(32, 33, 36);
+      }
     }
-    .gh-404 .container {
-      margin: 50px auto 40px auto;
-      width: 600px;
-      text-align: center;
+    .gh-404.fade { opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+    .gh-404 .nt-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 24px;
     }
+    .gh-404 .nt-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+      width: 100%;
+      max-width: 920px;
+    }
+    .gh-404 .nt-msg { max-width: 600px; }
+    .gh-404 .nt-icon { width: 72px; height: 72px; color: var(--icon-color); margin-bottom: 34px; display: block; }
     .gh-404 h1 {
-      width: 800px;
-      position: relative;
-      left: -100px;
-      letter-spacing: -1px;
-      line-height: 60px;
-      font-size: 60px;
-      font-weight: 100;
-      margin: 0 0 50px 0;
-      text-shadow: 0 1px 0 #fff;
+      color: var(--heading-color);
+      font-size: 1.6em;
+      font-weight: 400;
+      line-height: 1.3;
+      margin: 0 0 16px 0;
       user-select: none;
     }
-    .gh-404 p {
-      color: rgba(0, 0, 0, 0.5);
-      margin: 20px 0;
-      line-height: 1.6;
+    .gh-404 p { margin: 0 0 16px 0; line-height: 1.6; }
+    .gh-404 .nt-code {
+      color: var(--error-code-color);
+      font-size: 0.8em;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
     }
-    .gh-404 a { color: #4183c4; text-decoration: none; }
-    .gh-404 a:hover { text-decoration: underline; }
-    .gh-404 #suggestions { margin-top: 35px; color: #ccc; }
-    .gh-404 #suggestions a { color: #666666; font-weight: 200; font-size: 14px; margin: 0 10px; }
-    .gh-404 .logo { display: inline-block; margin-top: 35px; }
-    .gh-404 .gh-mark { width: 32px; height: 32px; display: block; }
-    @media (max-width: 640px) {
-      .gh-404 .container { width: auto; margin: 50px 20px 40px; }
-      .gh-404 h1 { width: auto; left: 0; }
+    .gh-404 .nt-reload {
+      flex-shrink: 0;
+      background: var(--btn-fill);
+      color: var(--btn-text);
+      border: 0;
+      border-radius: 20px;
+      padding: 9px 24px;
+      font-family: inherit;
+      font-size: 0.875em;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+    }
+    @media (max-width: 720px) {
+      .gh-404 .nt-inner { flex-direction: column; align-items: flex-start; gap: 28px; }
     }
   </style>
 </head>
@@ -363,20 +395,22 @@
 <body class="staticrypt-body">
 
   <div id="gh404" class="gh-404">
-    <div class="container">
-      <h1 id="gh404h">404</h1>
-      <p><strong>There isn't a GitHub Pages site here.</strong></p>
-      <p>
-        If you're trying to publish one, <a href="https://docs.github.com/pages" target="_blank" rel="noopener">read the full documentation</a>
-        to learn how to set up <strong>GitHub Pages</strong> for your repository, organization, or user account.
-      </p>
-      <div id="suggestions">
-        <a href="https://www.githubstatus.com" target="_blank" rel="noopener">GitHub Status</a>
-        &mdash; <a href="https://twitter.com/githubstatus" target="_blank" rel="noopener">@githubstatus</a>
+    <div class="nt-wrap">
+      <div class="nt-inner">
+        <div class="nt-msg">
+          <svg class="nt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+            <path d="M14 3v5h5"/>
+            <circle cx="9.6" cy="13" r="0.5" fill="currentColor" stroke="none"/>
+            <circle cx="14.4" cy="13" r="0.5" fill="currentColor" stroke="none"/>
+            <path d="M9.5 17c1.4-1.3 3.6-1.3 5 0"/>
+          </svg>
+          <h1 id="gh404h">This site can&rsquo;t be reached</h1>
+          <p>Check if there is a typo in alexdb.xyz.</p>
+          <div class="nt-code">DNS_PROBE_FINISHED_NXDOMAIN</div>
+        </div>
+        <button class="nt-reload" type="button" onclick="location.reload()">Reload</button>
       </div>
-      <a class="logo logo-img-2x" href="https://github.com" target="_blank" rel="noopener">
-        <img class="gh-mark" width="32" height="32" alt="GitHub" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpEQUM1QkUxRUI0MUMxMUUyQUQzREIxQzRENUFFNUM5NiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpEQUM1QkUxRkI0MUMxMUUyQUQzREIxQzRENUFFNUM5NiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkUxNkJENjdGQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkUxNkJENjgwQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+hfPRaQAAB6lJREFUeNrsW2mM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"/>
-      </a>
     </div>
   </div>
 
