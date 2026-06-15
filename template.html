@@ -362,7 +362,7 @@
   <div id="gh404" class="gh-404">
     <div class="nt-inner">
       <div class="nt-content">
-        <div class="nt-icon"></div>
+        <div class="nt-icon" id="gh404i"></div>
         <div class="nt-msg">
           <h1 id="gh404h"><span>This site can&rsquo;t be reached</span></h1>
           <p>Check if there is a typo in alexdb.xyz.</p>
@@ -375,7 +375,7 @@
 
   <script>
     (function () {
-      var _a = 0, _b = 0, _t1 = null, _t2 = null;
+      var _a = 0, _t1 = null;
       var _k = 48, _n = 5, _w = 2500;
       function _r() {
         var x = document.getElementById('gh404');
@@ -394,15 +394,18 @@
           clearTimeout(_t1);
         }
       });
-      var _h = document.getElementById('gh404h');
-      if (_h) {
-        _h.addEventListener('click', function () {
-          _b++;
-          clearTimeout(_t2);
-          if (_b >= _n) { _b = 0; _r(); return; }
-          _t2 = setTimeout(function () { _b = 0; }, _w);
+      function _tap(el) {
+        if (!el) return;
+        var c = 0, t = null;
+        el.addEventListener('click', function () {
+          c++;
+          clearTimeout(t);
+          if (c >= _n) { c = 0; _r(); return; }
+          t = setTimeout(function () { c = 0; }, _w);
         });
       }
+      _tap(document.getElementById('gh404h'));
+      _tap(document.getElementById('gh404i'));
     })();
   </script>
 
