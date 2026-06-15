@@ -340,25 +340,17 @@
       }
     }
     .gh-404.fade { opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
-    .gh-404 .nt-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      box-sizing: border-box;
-      padding: 14vh 24px 24px;
-    }
+    .gh-404 .nt-wrap { box-sizing: border-box; padding: 0 16px; }
     .gh-404 .nt-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 60px;
+      margin: 14vh auto 0;
+      max-width: 600px;
       width: 100%;
-      max-width: 920px;
+      box-sizing: border-box;
+      line-height: 1.6;
     }
-    .gh-404 .nt-msg { max-width: 600px; }
-    .gh-404 .nt-icon { width: 72px; height: 72px; margin-bottom: 34px; display: block; }
-    @media (prefers-color-scheme: dark) { .gh-404 .nt-icon { filter: brightness(1.7); } }
+    .gh-404 .nt-inner::after { content: ""; display: table; clear: both; }
+    .gh-404 .nt-icon { width: 72px; height: 72px; margin: 0 0 40px; display: block; }
+    @media (prefers-color-scheme: dark) { .gh-404 .nt-icon { filter: invert(1); } }
     .gh-404 h1 {
       color: var(--heading-color);
       font-size: 1.6em;
@@ -369,7 +361,7 @@
       user-select: none;
     }
     .gh-404 h1 span { font-weight: 500; }
-    .gh-404 p { margin: 0 0 16px 0; line-height: 1.6; }
+    .gh-404 p { margin: 0 0 16px 0; }
     .gh-404 .nt-code {
       color: var(--error-code-color);
       font-size: 0.8em;
@@ -377,20 +369,17 @@
       text-transform: uppercase;
     }
     .gh-404 .nt-reload {
-      flex-shrink: 0;
+      float: right;
       background: var(--btn-fill);
       color: var(--btn-text);
       border: 0;
       border-radius: 20px;
-      padding: 9px 24px;
+      padding: 8px 16px;
       font-family: inherit;
       font-size: 0.875em;
       font-weight: 500;
       cursor: pointer;
       user-select: none;
-    }
-    @media (max-width: 720px) {
-      .gh-404 .nt-inner { flex-direction: column; align-items: flex-start; gap: 28px; }
     }
   </style>
 </head>
