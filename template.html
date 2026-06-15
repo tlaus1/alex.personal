@@ -319,96 +319,55 @@
       font-family: system-ui, sans-serif;
       font-size: 15px;
       --background-color: #fff;
-      --text-color: rgb(95, 99, 104);
-      --heading-color: rgb(32, 33, 36);
       --error-code-color: rgb(95, 99, 104);
-      --icon-color: rgb(128, 134, 139);
-      --btn-fill: rgb(26, 115, 232);
-      --btn-text: #fff;
+      --heading-color: rgb(32, 33, 36);
+      --primary-button-fill-color: rgb(26, 115, 232);
+      --primary-button-text-color: #fff;
+      --text-color: rgb(95, 99, 104);
       background: var(--background-color);
       color: var(--text-color);
+      overflow-wrap: break-word;
     }
     @media (prefers-color-scheme: dark) {
       .gh-404 {
         --background-color: rgb(32, 33, 36);
-        --text-color: rgb(154, 160, 166);
-        --heading-color: rgb(154, 160, 166);
         --error-code-color: rgb(154, 160, 166);
-        --icon-color: rgb(154, 160, 166);
-        --btn-fill: rgb(138, 180, 248);
-        --btn-text: rgb(32, 33, 36);
+        --heading-color: rgb(154, 160, 166);
+        --primary-button-fill-color: rgb(138, 180, 248);
+        --primary-button-text-color: rgb(32, 33, 36);
+        --text-color: rgb(154, 160, 166);
       }
     }
     .gh-404.fade { opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
-    .gh-404 .nt-wrap { box-sizing: border-box; padding: 0 16px; }
-    .gh-404 .nt-inner {
-      margin: 14vh auto 0;
-      max-width: 600px;
-      width: 100%;
-      box-sizing: border-box;
-      line-height: 1.6em;
-    }
-    .gh-404 .nt-inner::after { content: ""; display: table; clear: both; }
-    .gh-404 .nt-icon { width: 72px; height: 72px; margin: 0 0 40px; display: block; }
+    .gh-404 .nt-inner { box-sizing: border-box; font-size: 1em; line-height: 1.6em; margin: 14vh auto 0; max-width: 600px; width: 100%; }
+    .gh-404 .nt-icon { user-select: none; display: inline-block; height: 72px; width: 72px; margin: 0 0 40px; background-repeat: no-repeat; background-size: 100%; content: image-set(url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAENJREFUeF7tzbEJACEQRNGBLeAasBCza2lLEGx0CxFGG9hBMDDxRy/72O9FMnIFapGylsu1fgoBdkXfUHLrQgdfrlJN1BdYBjQQm3UAAAAASUVORK5CYII=") 1x, url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQMAAADdiHD7AAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAFJJREFUeF7t0cENgDAMQ9FwYgxG6WjpaIzCCAxQxVggFuDiCvlLOeRdHR9yzjncHVoq3npu+wQUrUuJHylSTmBaespJyJQoObUeyxDQb3bEm5Au81c0pSCD8HYAAAAASUVORK5CYII=") 2x); }
     @media (prefers-color-scheme: dark) { .gh-404 .nt-icon { filter: invert(1); } }
-    .gh-404 h1 {
-      color: var(--heading-color);
-      font-size: 1.6em;
-      font-weight: normal;
-      line-height: 1.25em;
-      margin: 0 0 16px 0;
-      word-wrap: break-word;
-      user-select: none;
-    }
+    .gh-404 h1 { color: var(--heading-color); font-size: 1.6em; font-weight: normal; line-height: 1.25em; margin: 0 0 16px; overflow-wrap: break-word; user-select: none; }
     .gh-404 h1 span { font-weight: 500; }
-    .gh-404 p { margin: 0; }
-    .gh-404 .nt-code {
-      color: var(--error-code-color);
-      font-size: 0.8em;
-      margin-top: 12px;
-      text-transform: uppercase;
-    }
-    .gh-404 .nt-reload {
-      float: right;
-      background: var(--btn-fill);
-      color: var(--btn-text);
-      border: 0;
-      border-radius: 20px;
-      padding: 8px 16px;
-      font-family: inherit;
-      font-size: 0.875em;
-      font-weight: 500;
-      cursor: pointer;
-      user-select: none;
-    }
-    @media (max-width: 420px) {
-      .gh-404 .nt-reload {
-        float: none;
-        position: absolute;
-        left: 16px;
-        right: 16px;
-        bottom: 24px;
-        width: auto;
-        padding: 13px 16px;
-        text-align: center;
-      }
-    }
+    .gh-404 .nt-msg > p { display: inline; margin: 0; }
+    .gh-404 .nt-code { color: var(--error-code-color); font-size: 0.8em; margin-top: 12px; text-transform: uppercase; }
+    .gh-404 .nt-nav { margin-top: 51px; }
+    .gh-404 .nt-nav::after { clear: both; content: ""; display: table; width: 100%; }
+    .gh-404 .nt-reload { border: 0; border-radius: 20px; box-sizing: border-box; background: var(--primary-button-fill-color); color: var(--primary-button-text-color); cursor: pointer; float: right; font-size: 0.875em; margin: 0; padding: 8px 16px; font-family: inherit; user-select: none; }
+    @media (max-width: 700px) { .gh-404 .nt-inner { padding: 0 10%; } }
+    @media (max-width: 420px) { .gh-404 .nt-inner { padding: 0 5%; } .gh-404 .nt-nav { margin-top: 30px; } .gh-404 .nt-reload { float: none; font-size: 0.825em; font-weight: 500; margin: 0; width: 100%; padding: 16px 24px; } }
+    @media (max-width: 420px) and (min-height: 401px) { .gh-404 .nt-nav { background: var(--background-color); bottom: 0; box-shadow: 0 -12px 24px var(--background-color); left: 0; right: 0; margin: 0 auto; max-width: 736px; padding-inline: 24px; position: fixed; width: 100%; z-index: 2; } .gh-404 .nt-inner { max-width: 736px; } }
   </style>
 </head>
 
 <body class="staticrypt-body">
 
   <div id="gh404" class="gh-404">
-    <div class="nt-wrap">
-      <div class="nt-inner">
+    <div class="nt-inner">
+      <div class="nt-content">
+        <div class="nt-icon"></div>
         <div class="nt-msg">
-          <img class="nt-icon" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQMAAADdiHD7AAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAFJJREFUeF7t0cENgDAMQ9FwYgxG6WjpaIzCCAxQxVggFuDiCvlLOeRdHR9yzjncHVoq3npu+wQUrUuJHylSTmBaespJyJQoObUeyxDQb3bEm5Au81c0pSCD8HYAAAAASUVORK5CYII=" />
           <h1 id="gh404h"><span>This site can&rsquo;t be reached</span></h1>
           <p>Check if there is a typo in alexdb.xyz.</p>
           <div class="nt-code">DNS_PROBE_FINISHED_NXDOMAIN</div>
         </div>
-        <button class="nt-reload" type="button" onclick="location.reload()">Reload</button>
       </div>
+      <div class="nt-nav"><button class="nt-reload" type="button" onclick="location.reload()">Reload</button></div>
     </div>
   </div>
 
