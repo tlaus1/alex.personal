@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  let body: { messages?: unknown; model?: string; system?: string };
+  let body: { messages?: unknown; model?: string; system?: string; tools?: unknown; tool_choice?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -97,6 +97,13 @@ Deno.serve(async (req) => {
   };
   if (typeof body.system === "string" && body.system.trim()) {
     anthropicReq.system = body.system;
+  }
+  // Agentic tool use: the dashboard sends its tool definitions; we forward them
+  // so Claude can call them. The tool *results* are produced client-side and
+  // sent back as normal messages, so the function stays a thin streaming proxy.
+  if (Array.isArray(body.tools) && body.tools.length) {
+    anthropicReq.tools = body.tools;
+    if (body.tool_choice) anthropicReq.tool_choice = body.tool_choice;
   }
 
   const upstream = await fetch("https://api.anthropic.com/v1/messages", {
