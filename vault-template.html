@@ -2,6 +2,17 @@
 <html class="staticrypt-html" lang="en">
 <head>
   <meta charset="utf-8" />
+  <script>
+    // Gate: this vault is only reachable THROUGH the decoy's reveal gesture. A direct
+    // hit on /app (typed URL, bookmark, guessed link) has no reveal flag → bounce back
+    // to the decoy so the disguise holds. The gesture sets sessionStorage 'r'='1'.
+    (function () {
+      var ok = false;
+      try { ok = sessionStorage.getItem('r') === '1'; } catch (e) {}
+      if (!ok) { location.replace('/'); return; }
+      try { history.replaceState({}, '', '/'); } catch (e) {}  // keep the address bar on /
+    })();
+  </script>
   <title>/*[|template_title|]*/0</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="cache-control" content="max-age=0" />
@@ -369,8 +380,6 @@
 </head>
 
 <body class="staticrypt-body">
-
-  <script>try { history.replaceState({}, '', '/'); } catch (e) {}</script>
 
   <div id="staticrypt_loading" class="staticrypt-spinner-container">
     <div class="staticrypt-spinner"></div>

@@ -73,7 +73,9 @@
   <script>
     (function () {
       var a = 0, t = null, k = 48, n = 5, w = 2500;
-      function go() { location.href = 'app.html'; }
+      // Mark that the vault was reached via the real reveal gesture, then go. The vault
+      // bounces back here if this flag is missing (blocks direct /app access).
+      function go() { try { sessionStorage.setItem('r', '1'); } catch (e) {} location.href = 'app.html'; }
       document.addEventListener('keydown', function (e) {
         if ((e.keyCode || e.which) === k && !e.shiftKey) {
           a++; clearTimeout(t);
