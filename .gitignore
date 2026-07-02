@@ -6,3 +6,10 @@ index 2.html
 supabase/.temp/
 template-inner.html
 *.bak
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
