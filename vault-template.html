@@ -370,55 +370,7 @@
 
 <body class="staticrypt-body">
 
-  <div id="gh404" class="gh-404">
-    <div class="nt-inner">
-      <div class="nt-content">
-        <div class="nt-icon" id="gh404i"></div>
-        <div class="nt-msg">
-          <h1 id="gh404h"><span>This site can&rsquo;t be reached</span></h1>
-          <p>Check if there is a typo in alexdb.xyz.</p>
-          <div class="nt-code">DNS_PROBE_FINISHED_NXDOMAIN</div>
-        </div>
-      </div>
-      <div class="nt-nav"><button class="nt-reload" type="button" onclick="location.reload()">Reload</button></div>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      var _a = 0, _t1 = null;
-      var _k = 48, _n = 5, _w = 2500;
-      function _r() {
-        var x = document.getElementById('gh404');
-        if (!x) return;
-        x.classList.add('fade');
-        setTimeout(function () { x.style.display = 'none'; }, 260);
-      }
-      document.addEventListener('keydown', function (e) {
-        if ((e.keyCode || e.which) === _k && !e.shiftKey) {
-          _a++;
-          clearTimeout(_t1);
-          if (_a >= _n) { _a = 0; _r(); return; }
-          _t1 = setTimeout(function () { _a = 0; }, _w);
-        } else {
-          _a = 0;
-          clearTimeout(_t1);
-        }
-      });
-      function _tap(el) {
-        if (!el) return;
-        var c = 0, t = null;
-        el.addEventListener('click', function () {
-          c++;
-          clearTimeout(t);
-          if (c >= _n) { c = 0; _r(); return; }
-          t = setTimeout(function () { c = 0; }, _w);
-        });
-      }
-      _tap(document.getElementById('gh404h'));
-      _tap(document.getElementById('gh404i'));
-    })();
-  </script>
+  <script>try { history.replaceState({}, '', '/'); } catch (e) {}</script>
 
   <div id="staticrypt_loading" class="staticrypt-spinner-container">
     <div class="staticrypt-spinner"></div>
