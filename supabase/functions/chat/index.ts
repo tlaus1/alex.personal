@@ -23,6 +23,15 @@ const ALLOWED_MODELS = new Set([
   "claude-haiku-4-5-20251001",
 ]);
 
+// The web_search tool version depends on the model: the newer dynamic-filtering
+// variant needs a 4.6+/5-class model; Haiku 4.5 uses the original variant.
+function webSearchTool(model: string): Record<string, unknown> {
+  const version = model === "claude-haiku-4-5-20251001"
+    ? "web_search_20250305"
+    : "web_search_20260209"; // fable-5, opus-4-8, sonnet-4-6 support dynamic filtering
+  return { type: version, name: "web_search", max_uses: 5 };
+}
+
 function corsHeaders(origin: string | null): HeadersInit {
   return {
     "Access-Control-Allow-Origin": origin || "*",
@@ -67,7 +76,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  let body: { messages?: unknown; model?: string; system?: string; tools?: unknown; tool_choice?: unknown };
+  let body: { messages?: unknown; model?: string; system?: string; tools?: unknown; tool_choice?: unknown; search?: boolean };
   try {
     body = await req.json();
   } catch {
@@ -98,11 +107,17 @@ Deno.serve(async (req) => {
   if (typeof body.system === "string" && body.system.trim()) {
     anthropicReq.system = body.system;
   }
-  // Agentic tool use: the dashboard sends its tool definitions; we forward them
-  // so Claude can call them. The tool *results* are produced client-side and
-  // sent back as normal messages, so the function stays a thin streaming proxy.
-  if (Array.isArray(body.tools) && body.tools.length) {
-    anthropicReq.tools = body.tools;
+  // Tools — two kinds get merged:
+  //   1. The dashboard's own tools (client-executed; results come back as normal
+  //      messages, so the function stays a thin streaming proxy).
+  //   2. Anthropic's SERVER-side web_search tool, enabled when the client sends
+  //      `search: true`. Claude runs the search on Anthropic's side and streams
+  //      the results + citations back inline — nothing to execute here.
+  const tools: unknown[] = [];
+  if (Array.isArray(body.tools) && body.tools.length) tools.push(...body.tools);
+  if (body.search) tools.push(webSearchTool(model));
+  if (tools.length) {
+    anthropicReq.tools = tools;
     if (body.tool_choice) anthropicReq.tool_choice = body.tool_choice;
   }
 
