@@ -73,10 +73,12 @@ ALLOWED_EXT = {
     ".8xy": "y-var",
     ".8ci": "image",
     ".8ca": "image",
-    ".8xk": "app",
-    ".8ek": "app",
     ".8xd": "gdb",
 }
+# NOTE: Flash applications (.8xk / .8ek) are deliberately NOT listed. They use
+# the "**TIFL**" container, not the "**TI83F*" variable format the WebUSB link
+# library understands, and TI-signed flash apps need a different transfer path.
+# Listing them would show files in the dashboard that always fail on send.
 
 
 def library_root():
