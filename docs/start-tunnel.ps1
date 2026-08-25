@@ -23,6 +23,16 @@ if (Test-Path $calcBridge) {
 Start-Process python -ArgumentList $calcBridge -WorkingDirectory $base -WindowStyle Minimized | Out-Null
 Write-Host 'calc-bridge OK' -ForegroundColor Green
 }
+# TI-84 Claude bridge (USB serial to the calculator). Unrelated to calc-bridge.py:
+# no network port, it just waits for the calculator's COM port to appear.
+# Minimized rather than hidden on purpose - the calculator's [6] Type on computer
+# feature needs a real console, so this window must exist and be restorable.
+$ti84Dir = 'C:\ti84-bridge'
+$ti84Py  = "$ti84Dir\.venv\Scripts\python.exe"
+if ((Test-Path $ti84Py) -and (Test-Path "$ti84Dir\bridge.py")) {
+Start-Process $ti84Py -ArgumentList "$ti84Dir\bridge.py" -WorkingDirectory $ti84Dir -WindowStyle Minimized | Out-Null
+Write-Host 'ti84-claude bridge OK' -ForegroundColor Green
+}
 $webServer = "$base\moonlight-web\web-server.exe"
 if (Test-Path $webServer) {
 Start-Process $webServer -WorkingDirectory "$base\moonlight-web" -WindowStyle Minimized | Out-Null
