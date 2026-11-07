@@ -34,3 +34,6 @@ revoke update on public.alerts from authenticated;
 grant  update (read) on public.alerts to authenticated;
 grant  select, delete on public.alerts to authenticated;
 revoke all on public.alerts from anon;
+
+-- Make the API notice the new table immediately (avoids PGRST205 'schema cache').
+notify pgrst, 'reload schema';
