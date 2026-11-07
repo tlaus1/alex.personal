@@ -8,8 +8,8 @@
 //
 //   POST /functions/v1/alert
 //   Authorization: Bearer <ALERT_INGEST_TOKEN>
-//   { "title": "...", "body": "...", "level": "info|warn|urgent",
-//     "source": "tomo", "url": "https://..." }
+//   { "title": "...", "body": "one-line preview", "summary": "fuller summary",
+//     "level": "info|warn|urgent", "source": "tomo", "url": "https://..." }
 
 const INGEST_TOKEN = Deno.env.get("ALERT_INGEST_TOKEN") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
   if (!token || !safeEqual(token, INGEST_TOKEN)) return json({ error: "unauthorized" }, 401);
 
   const raw = await req.text();
-  if (raw.length > 8192) return json({ error: "payload too large" }, 413);
+  if (raw.length > 16384) return json({ error: "payload too large" }, 413);
   let body: Record<string, unknown>;
   try { body = JSON.parse(raw); } catch { return json({ error: "body must be JSON" }, 400); }
 
@@ -53,6 +53,8 @@ Deno.serve(async (req) => {
   const row = {
     title,
     body: clean(body.body, 2000) || null,
+    // Expanded view. Newlines are kept so Tomo can send short paragraphs/bullets.
+    summary: clean(body.summary, 6000) || null,
     level,
     source: clean(body.source, 40) || "tomo",
     // Only https links survive; everything else is dropped rather than rejected.
