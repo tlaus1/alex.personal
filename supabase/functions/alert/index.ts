@@ -70,12 +70,21 @@ Deno.serve(async (req) => {
   const total = Number((recent.headers.get("content-range") ?? "").split("/")[1] ?? 0);
   if (total >= MAX_PER_MINUTE) return json({ error: "rate limited" }, 429);
 
-  const ins = await fetch(rest, {
-    method: "POST",
-    headers: { ...headers, Prefer: "return=representation" },
-    body: JSON.stringify(row),
-  });
-  if (!ins.ok) return json({ error: "could not store alert", detail: await ins.text() }, 500);
+  // PGRST303 "JWT issued at future" means Supabase's token signer is briefly
+  // ahead of its own API clock; the request is fine, it is just early.
+  let ins: Response | null = null;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    ins = await fetch(rest, {
+      method: "POST",
+      headers: { ...headers, Prefer: "return=representation" },
+      body: JSON.stringify(row),
+    });
+    if (ins.ok) break;
+    const text = await ins.clone().text();
+    if (!/PGRST303|issued at future/i.test(text)) break;
+    await new Promise((r) => setTimeout(r, 2500));
+  }
+  if (!ins || !ins.ok) return json({ error: "could not store alert", detail: ins ? await ins.text() : "no response" }, 500);
   const [saved] = await ins.json();
   return json({ ok: true, id: saved?.id }, 201);
 });
