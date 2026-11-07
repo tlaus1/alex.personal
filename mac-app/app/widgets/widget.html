@@ -1,0 +1,204 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>widget</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: transparent; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; color: #f5f5f7; }
+  /* the whole card drags the window; controls opt out */
+  .card { -webkit-app-region: drag; height: 100%; padding: 14px 16px;
+    border-radius: 18px; border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(28,28,30,0.55); backdrop-filter: blur(30px) saturate(180%);
+    display: flex; flex-direction: column; gap: 6px; }
+  .label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: #8e8e93; font-weight: 600; }
+  .big { font-size: 30px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.1; }
+  .sub { font-size: 12px; color: #a1a1a6; }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: #8e8e93; margin-right: 6px; vertical-align: middle; }
+  .dot.on { background: #30d158; } .dot.off { background: #ff453a; }
+  .rows { margin-top: 4px; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 11px; }
+  .rows span:nth-child(odd) { color: #6e6e73; }
+  .hide { -webkit-app-region: no-drag; position: absolute; top: 8px; right: 10px;
+    background: none; border: 0; color: #6e6e73; font-size: 15px; cursor: pointer; padding: 2px 5px; }
+  .hide:hover { color: #f5f5f7; }
+
+  /* interactive widgets: controls must not drag the window */
+  button, input, select, textarea, .log { -webkit-app-region: no-drag; }
+  .pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 4px; }
+  .pill { padding: 6px 0; border-radius: 8px; font-size: 10px; font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05);
+    color: #a1a1a6; cursor: pointer; }
+  .pill.on { background: #0a84ff; border-color: #0a84ff; color: #fff; }
+  .play { width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+    background: #f5f5f7; color: #000; font-size: 14px; display: grid; place-items: center; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  input[type=range] { flex: 1; accent-color: #0a84ff; }
+
+  /* chat */
+  .log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 7px;
+    font-size: 12px; line-height: 1.45; padding-right: 2px; }
+  .msg { padding: 7px 10px; border-radius: 11px; max-width: 88%; white-space: pre-wrap; word-break: break-word; }
+  .me { align-self: flex-end; background: #0a84ff; color: #fff; }
+  .ai { align-self: flex-start; background: rgba(255,255,255,0.09); }
+  .ask { display: flex; gap: 6px; }
+  .ask input { flex: 1; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 9px; color: #f5f5f7; padding: 7px 10px; font-size: 12px; font-family: inherit; outline: none; }
+  .ask input:focus { border-color: #0a84ff; }
+  .ask button { background: #f5f5f7; color: #000; border: 0; border-radius: 9px;
+    padding: 0 12px; font-weight: 600; cursor: pointer; font-size: 12px; }
+  .ask button:disabled { opacity: 0.4; cursor: default; }
+</style>
+<script src="config.js"></script>
+<script src="music.js"></script>
+<div class="card" id="card"></div>
+<script>
+  const type = new URLSearchParams(location.search).get('type') || 'clock';
+  const card = document.getElementById('card');
+  const close = '<button class="hide" onclick="window.close()">&times;</button>';
+
+  function clock() {
+    const now = new Date();
+    card.innerHTML = close +
+      `<div class="label">${now.toLocaleDateString([], { weekday: 'long' })}</div>` +
+      `<div class="big">${now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</div>` +
+      `<div class="sub">${now.toLocaleDateString([], { month: 'long', day: 'numeric' })}</div>`;
+  }
+
+  async function status() {
+    card.innerHTML = close + '<div class="label">AlexPC</div><div class="sub">checking...</div>';
+    try {
+      const r = await fetch('https://status.alexdb.xyz/api/status', { cache: 'no-store' });
+      if (!r.ok) throw new Error('http ' + r.status);
+      const d = await r.json();
+      card.innerHTML = close +
+        `<div class="label">${d.name || 'PC'}</div>` +
+        `<div class="big" style="font-size:17px"><span class="dot on"></span>Online</div>` +
+        `<div class="rows">
+           <span>CPU</span><span>${(d.cpu || '').replace(/\s*\d+-Core Processor/, '')}</span>
+           <span>GPU</span><span>${d.gpu || '--'}</span>
+           <span>RAM</span><span>${d.ram || '--'}</span>
+           <span>NET</span><span>${d.net || '--'}</span>
+         </div>`;
+    } catch (e) {
+      card.innerHTML = close +
+        '<div class="label">AlexPC</div>' +
+        '<div class="big" style="font-size:17px"><span class="dot off"></span>Offline</div>' +
+        '<div class="sub">tunnel unreachable</div>';
+    }
+  }
+
+  function music() {
+    const A = window.AmbientAudio;
+    const vol = Number(localStorage.getItem('vol') ?? 0.35);
+    card.innerHTML = close +
+      '<div class="label">Ambient</div>' +
+      '<div class="row" style="margin:4px 0 2px">' +
+        '<button class="play" id="pp">&#9654;</button>' +
+        '<input type="range" id="vol" min="0" max="1" step="0.01" value="' + vol + '">' +
+      '</div>' +
+      '<div class="pills" id="pills">' +
+        A.presets.map(p => '<button class="pill' + (p === A.preset ? ' on' : '') + '" data-p="' + p + '">' + p + '</button>').join('') +
+      '</div>';
+
+    const pp = document.getElementById('pp');
+    const paint = () => { pp.innerHTML = A.playing ? '&#10073;&#10073;' : '&#9654;'; };
+    pp.onclick = () => { A.playing ? A.stop() : A.play(); paint(); };
+    document.getElementById('vol').oninput = e => A.setVolume(Number(e.target.value));
+    document.getElementById('pills').onclick = e => {
+      const b = e.target.closest('.pill'); if (!b) return;
+      document.querySelectorAll('.pill').forEach(x => x.classList.toggle('on', x === b));
+      A.play(b.dataset.p);      // switching preset also starts it
+      paint();
+    };
+    paint();
+  }
+
+  function chat() {
+    const cfg = window.ALEXDB_CFG || {};
+    card.innerHTML = close +
+      '<div class="label">Claude</div>' +
+      '<div class="log" id="log"></div>' +
+      '<div class="ask"><input id="q" placeholder="Ask something..." autocomplete="off">' +
+      '<button id="send">Ask</button></div>';
+    const log = document.getElementById('log');
+    const q = document.getElementById('q');
+    const send = document.getElementById('send');
+    const history = [];
+
+    function add(role, text) {
+      const d = document.createElement('div');
+      d.className = 'msg ' + (role === 'user' ? 'me' : 'ai');
+      d.textContent = text;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+      return d;
+    }
+
+    async function ask() {
+      const text = q.value.trim();
+      if (!text) return;
+      q.value = ''; send.disabled = true;
+      add('user', text);
+      history.push({ role: 'user', content: text });
+      const out = add('assistant', '...');
+      try {
+        const r = await fetch(cfg.SUPABASE_URL + '/functions/v1/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': cfg.SUPABASE_KEY,
+            'Authorization': 'Bearer ' + cfg.SUPABASE_KEY,
+            'x-dashboard-token': cfg.DASHBOARD_TOKEN,
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            system: 'You are a desktop widget. Answer in at most 60 words, plain text, no markdown.',
+            messages: history.slice(-8),
+          }),
+        });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        // The function streams SSE; accumulate the text deltas as they arrive.
+        const reader = r.body.getReader(), dec = new TextDecoder();
+        let buf = '', answer = '';
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, { stream: true });
+          const lines = buf.split('\n'); buf = lines.pop();
+          for (const line of lines) {
+            if (!line.startsWith('data:')) continue;
+            const payload = line.slice(5).trim();
+            if (!payload || payload === '[DONE]') continue;
+            try {
+              const evt = JSON.parse(payload);
+              if (evt.type === 'content_block_delta' && evt.delta && evt.delta.type === 'text_delta') {
+                answer += evt.delta.text;
+                out.textContent = answer;
+                log.scrollTop = log.scrollHeight;
+              }
+            } catch (e) {}
+          }
+        }
+        if (!answer.trim()) throw new Error('empty response');
+        history.push({ role: 'assistant', content: answer });
+      } catch (e) {
+        out.textContent = 'Failed: ' + (e.message || e);
+        history.pop();
+      } finally {
+        send.disabled = false; q.focus();
+      }
+    }
+
+    send.onclick = ask;
+    q.onkeydown = e => { if (e.key === 'Enter') ask(); };
+    setTimeout(() => q.focus(), 100);
+  }
+
+  if (type === 'clock') { clock(); setInterval(clock, 1000); }
+  else if (type === 'music') { music(); }
+  else if (type === 'chat') { chat(); }
+  else { status(); setInterval(status, 30000); }
+</script>

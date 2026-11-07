@@ -1,0 +1,425 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		71FBBE0850D130025788E4BA /* AlexdbWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 149B0DF562D9991FB97FFED8 /* AlexdbWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AF8EFBF27A7915AF868EA1CE /* AlexdbWidgetsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D38782A8EC77B4A9ED2307 /* AlexdbWidgetsApp.swift */; };
+		B18B633769EC04E49FA6955C /* AlexdbWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0A3AF53229DEA5C12FF3D /* AlexdbWidget.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		624CF9D947624B35CB5A2B00 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D7C23EA149A1A82027A4ADB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A51AAAFC3566D4F03F0DD971;
+			remoteInfo = AlexdbWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		64A7BDC69CB458AB8148FFCF /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				71FBBE0850D130025788E4BA /* AlexdbWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		147037E03DB3D54676D51887 /* AlexdbWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AlexdbWidgetExtension.entitlements; sourceTree = "<group>"; };
+		149B0DF562D9991FB97FFED8 /* AlexdbWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AlexdbWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		205BBCA41E6946EEF4D8FEF4 /* AlexdbWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AlexdbWidgets.entitlements; sourceTree = "<group>"; };
+		2D58886FAC9DBFAAEBFA7F07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5EE058ACE3E3934AD90385AC /* AlexdbWidgets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlexdbWidgets.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FA0A3AF53229DEA5C12FF3D /* AlexdbWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlexdbWidget.swift; sourceTree = "<group>"; };
+		B3D38782A8EC77B4A9ED2307 /* AlexdbWidgetsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlexdbWidgetsApp.swift; sourceTree = "<group>"; };
+		BA14A348B3CFF8BCE4AAF527 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		16FDE4546F4411E589CCF8B6 = {
+			isa = PBXGroup;
+			children = (
+				6C306CE3B545CCCFF3B0BDD2 /* AlexdbWidgetExtension */,
+				E4711316EBDEA5B763C603DB /* AlexdbWidgets */,
+				A851911E67EF3136F62D21A9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6C306CE3B545CCCFF3B0BDD2 /* AlexdbWidgetExtension */ = {
+			isa = PBXGroup;
+			children = (
+				6FA0A3AF53229DEA5C12FF3D /* AlexdbWidget.swift */,
+				147037E03DB3D54676D51887 /* AlexdbWidgetExtension.entitlements */,
+				BA14A348B3CFF8BCE4AAF527 /* Info.plist */,
+			);
+			path = AlexdbWidgetExtension;
+			sourceTree = "<group>";
+		};
+		A851911E67EF3136F62D21A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				149B0DF562D9991FB97FFED8 /* AlexdbWidgetExtension.appex */,
+				5EE058ACE3E3934AD90385AC /* AlexdbWidgets.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E4711316EBDEA5B763C603DB /* AlexdbWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				205BBCA41E6946EEF4D8FEF4 /* AlexdbWidgets.entitlements */,
+				B3D38782A8EC77B4A9ED2307 /* AlexdbWidgetsApp.swift */,
+				2D58886FAC9DBFAAEBFA7F07 /* Info.plist */,
+			);
+			path = AlexdbWidgets;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1F475B816AC86A5608CE1ED1 /* AlexdbWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EB06B33926B27C2A64BE91DF /* Build configuration list for PBXNativeTarget "AlexdbWidgets" */;
+			buildPhases = (
+				1DA8F76D3E43419413C79D7B /* Sources */,
+				64A7BDC69CB458AB8148FFCF /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				50EDCC55EFBFD6AB20DA0D4C /* PBXTargetDependency */,
+			);
+			name = AlexdbWidgets;
+			packageProductDependencies = (
+			);
+			productName = AlexdbWidgets;
+			productReference = 5EE058ACE3E3934AD90385AC /* AlexdbWidgets.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A51AAAFC3566D4F03F0DD971 /* AlexdbWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 928948FC7454D6857A29D531 /* Build configuration list for PBXNativeTarget "AlexdbWidgetExtension" */;
+			buildPhases = (
+				7D286A87C649FFE404CF3B91 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AlexdbWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = AlexdbWidgetExtension;
+			productReference = 149B0DF562D9991FB97FFED8 /* AlexdbWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2D7C23EA149A1A82027A4ADB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1F475B816AC86A5608CE1ED1 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+					A51AAAFC3566D4F03F0DD971 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = D45E086DA9992EA4C08DFBC9 /* Build configuration list for PBXProject "AlexdbWidgets" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 16FDE4546F4411E589CCF8B6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A851911E67EF3136F62D21A9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1F475B816AC86A5608CE1ED1 /* AlexdbWidgets */,
+				A51AAAFC3566D4F03F0DD971 /* AlexdbWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1DA8F76D3E43419413C79D7B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AF8EFBF27A7915AF868EA1CE /* AlexdbWidgetsApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7D286A87C649FFE404CF3B91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B18B633769EC04E49FA6955C /* AlexdbWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		50EDCC55EFBFD6AB20DA0D4C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A51AAAFC3566D4F03F0DD971 /* AlexdbWidgetExtension */;
+			targetProxy = 624CF9D947624B35CB5A2B00 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		30C63F755F1A6244AE3B818B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "MacWin Dev";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8F7721B18782053185CDC1FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AlexdbWidgetExtension/AlexdbWidgetExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = AlexdbWidgetExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = xyz.alexdb.widgets.extension;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A448021F177D6102DB58CA65 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AlexdbWidgetExtension/AlexdbWidgetExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = AlexdbWidgetExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = xyz.alexdb.widgets.extension;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A4A2E49740969403FAE994DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "MacWin Dev";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B56A7CF4E18BA76B39CAE153 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AlexdbWidgets/AlexdbWidgets.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = AlexdbWidgets/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = xyz.alexdb.widgets;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F93F01320533D003F80C1DC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AlexdbWidgets/AlexdbWidgets.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = AlexdbWidgets/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = xyz.alexdb.widgets;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		928948FC7454D6857A29D531 /* Build configuration list for PBXNativeTarget "AlexdbWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A448021F177D6102DB58CA65 /* Debug */,
+				8F7721B18782053185CDC1FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D45E086DA9992EA4C08DFBC9 /* Build configuration list for PBXProject "AlexdbWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30C63F755F1A6244AE3B818B /* Debug */,
+				A4A2E49740969403FAE994DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EB06B33926B27C2A64BE91DF /* Build configuration list for PBXNativeTarget "AlexdbWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B56A7CF4E18BA76B39CAE153 /* Debug */,
+				F93F01320533D003F80C1DC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2D7C23EA149A1A82027A4ADB /* Project object */;
+}

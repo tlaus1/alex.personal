@@ -1,0 +1,28 @@
+{
+  "name": "alexdb",
+  "productName": "alexdb",
+  "version": "1.0.0",
+  "description": "alexdb dashboard as a native Mac app",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "sync": "node sync.js",
+    "start": "npm run sync && electron .",
+    "dist": "npm run sync && electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "xyz.alexdb.dashboard",
+    "productName": "alexdb",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["main.js", "preload.js", "app/**"],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [{ "target": "dmg", "arch": ["arm64"] }],
+      "identity": null
+    }
+  }
+}

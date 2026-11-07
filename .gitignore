@@ -6,3 +6,11 @@ index 2.html
 supabase/.temp/
 template-inner.html
 *.bak
+
+# Mac app + widget builds (mac-app/app/ holds a PLAINTEXT copy of the dashboard)
+mac-app/node_modules/
+mac-app/dist/
+mac-app/app/index.html
+mac-app/app/widgets/config.js
+mac-widget/build/
+mac-widget/*.xcodeproj/xcuserdata/
