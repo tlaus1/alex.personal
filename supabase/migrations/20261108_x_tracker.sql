@@ -1,5 +1,5 @@
 -- X Tracker: watch specific X (Twitter) accounts and show their posts on the
--- dashboard, J7Tracker-style.
+-- dashboard, J7Tracker-style. Safe to run more than once.
 --
 -- Rows are written ONLY by the `xtrack` edge function (service role), which
 -- holds the twitterapi.io key. The browser can read its own rows and delete
@@ -13,6 +13,7 @@ create table if not exists public.x_accounts (
   name        text                 check (char_length(name) <= 100),
   avatar      text                 check (avatar is null or avatar like 'https://%'),
   followers   integer,
+  checked_at  timestamptz,                                -- free mode: last time this account was fetched
   added_at    timestamptz not null default now(),
   primary key (user_id, handle)
 );
@@ -43,8 +44,13 @@ create table if not exists public.x_poll_state (
   last_poll_at timestamptz not null default 'epoch',
   since_id     text,
   credits      bigint      not null default 0,
-  last_error   text
+  last_error   text,
+  backoff_until timestamptz                               -- free mode: X rate-limited us until then
 );
+
+-- Safe to re-run: adds the free-mode columns if an earlier version of this file already ran.
+alter table public.x_accounts   add column if not exists checked_at    timestamptz;
+alter table public.x_poll_state add column if not exists backoff_until timestamptz;
 
 alter table public.x_accounts   enable row level security;
 alter table public.x_posts      enable row level security;

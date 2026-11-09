@@ -9,6 +9,16 @@
 //   { "action": "add",  "handle": "elonmusk" }   validate + track + seed recent posts
 //   { "action": "poll" }                         fetch anything new (throttled)
 //
+// TWO MODES
+//   Free (no TWITTERAPI_KEY set): reads X's public embedded-timeline feed
+//   (syndication.twitter.com, what "embed this profile" widgets use). No key,
+//   no login, no cost. X allows roughly 30 of these requests per 15 minutes
+//   per IP, and Supabase's IPs are shared, so each poll checks ONE account
+//   (least recently checked first) and backs off when X says to. Replies are
+//   not included, and a few giant accounts get a "top posts" feed instead of
+//   their latest, so this is best-effort. X can change or close it anytime.
+//   Paid (TWITTERAPI_KEY set): twitterapi.io search, below.
+//
 // COST (twitterapi.io, 100,000 credits = $1): every search call costs at least
 // 15 credits, then 15 per tweet. One poll covers all tracked accounts in one
 // query, so polling every 30s while the dashboard is open is roughly $0.015/hr.
@@ -22,6 +32,10 @@ const MAX_ACCOUNTS = 30;
 const MAX_PAGES = 3;              // per query chunk per poll
 const KEEP_DAYS = 7;
 const TAPI = "https://api.twitterapi.io";
+const FREE = !API_KEY;
+const FREE_MIN_GAP_S = 20;
+const SYND = "https://syndication.twitter.com/srv/timeline-profile/screen-name/";
+const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
 
 const REST = `${SUPABASE_URL}/rest/v1`;
 const svc = { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, "Content-Type": "application/json" };
@@ -147,6 +161,113 @@ async function ensureState(userId: string) {
   });
 }
 
+// ---------- free mode: X's public embed feed ----------
+const unescapeHtml = (t: string) => t.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
+
+// v1.1-style tweet text: expand t.co links, drop the t.co that just points at attached media.
+function v1Text(t: any): string {
+  let text = String(t?.full_text ?? t?.text ?? "");
+  for (const u of t?.entities?.urls ?? []) if (u?.url && u?.expanded_url) text = text.split(u.url).join(u.expanded_url);
+  for (const m of t?.extended_entities?.media ?? t?.entities?.media ?? []) if (m?.url) text = text.split(m.url).join("");
+  return clean(unescapeHtml(text).trim(), 30000);
+}
+const v1Media = (t: any) => {
+  const u = (t?.extended_entities?.media ?? t?.entities?.media ?? [])[0]?.media_url_https;
+  return typeof u === "string" && u.startsWith("https://pbs.twimg.com/") ? u.slice(0, 500) : null;
+};
+
+function v1Row(userId: string, t: any) {
+  const id = String(t?.id_str ?? "");
+  if (!/^[0-9]{1,25}$/.test(id)) return null;
+  const handle = String(t?.user?.screen_name ?? "").toLowerCase();
+  if (!/^[a-z0-9_]{1,15}$/.test(handle)) return null;
+  const rt = t?.retweeted_status, qt = t?.quoted_status;
+  const inner = rt || qt;
+  const created = new Date(t?.created_at ?? "");
+  if (isNaN(created.getTime())) return null;
+  return {
+    user_id: userId,
+    tweet_id: id,
+    handle,
+    author_name: clean(t.user.name, 100) || null,
+    avatar: https(String(t.user.profile_image_url_https ?? "").replace("_normal.", "_bigger.")),
+    kind: rt ? "retweet" : qt ? "quote" : t?.in_reply_to_screen_name ? "reply" : "tweet",
+    text: rt ? "" : v1Text(t),
+    reply_to: t?.in_reply_to_screen_name ? clean(t.in_reply_to_screen_name, 15) : null,
+    quoted: inner ? { handle: clean(inner?.user?.screen_name, 15), name: clean(inner?.user?.name, 100), text: v1Text(inner).slice(0, 4000) } : null,
+    media: v1Media(t) ?? (inner ? v1Media(inner) : null),
+    url: `https://x.com/${handle}/status/${id}`,
+    created_at: created.toISOString(),
+  };
+}
+
+class RateLimited extends Error { constructor(public until: Date) { super("X rate limit"); } }
+
+// Fetch one account's embed timeline. Throws RateLimited when X says stop.
+async function syndication(handle: string): Promise<{ tweets: any[]; remaining: number; reset: Date | null }> {
+  const r = await fetch(SYND + encodeURIComponent(handle), { headers: { "User-Agent": UA, "Accept": "text/html" } });
+  const remaining = Number(r.headers.get("x-rate-limit-remaining") ?? 99);
+  const resetS = Number(r.headers.get("x-rate-limit-reset") ?? 0);
+  const reset = resetS ? new Date(resetS * 1000) : null;
+  if (r.status === 429) throw new RateLimited(reset && reset.getTime() > Date.now() ? reset : new Date(Date.now() + 5 * 60_000));
+  if (!r.ok) throw new Error(`X embed feed returned HTTP ${r.status}`);
+  const html = await r.text();
+  const m = html.match(/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s);
+  if (!m) throw new Error("X embed feed changed shape (no data block)");
+  const entries = JSON.parse(m[1])?.props?.pageProps?.timeline?.entries ?? [];
+  const tweets = entries.map((e: any) => e?.content?.tweet).filter(Boolean);
+  return { tweets, remaining, reset };
+}
+
+function freshRows(userId: string, tweets: any[]) {
+  const cutoff = Date.now() - KEEP_DAYS * 86400_000;          // skips old pinned / "top" posts
+  return tweets.map((t) => v1Row(userId, t)).filter((r): r is NonNullable<typeof r> => !!r && new Date(r.created_at).getTime() > cutoff);
+}
+
+async function setBackoff(userId: string, until: Date | null, error: string | null) {
+  await fetch(`${REST}/x_poll_state?user_id=eq.${userId}`, {
+    method: "PATCH", headers: { ...svc, Prefer: "return=minimal" },
+    body: JSON.stringify({ backoff_until: until ? until.toISOString() : null, last_error: error }),
+  });
+}
+
+async function freeProfile(handle: string) {
+  // fxtwitter is a public, keyless mirror of profile info (name, avatar, followers).
+  const r = await fetch(`https://api.fxtwitter.com/${encodeURIComponent(handle)}`, { headers: { "User-Agent": "alexdb-xtrack" } });
+  const j = await r.json().catch(() => null);
+  if (!r.ok || !j?.user?.screen_name) return null;
+  const u = j.user;
+  return { userName: u.screen_name, id: u.id, name: u.name, profilePicture: u.avatar_url, followers: u.followers, protected: !!u.protected };
+}
+
+async function freePoll(userId: string, state: any) {
+  if (state.backoff_until && new Date(state.backoff_until).getTime() > Date.now()) {
+    return { status: 200, body: { ok: true, mode: "free", skipped: true, backoff_until: state.backoff_until } };
+  }
+  const accts = await fetch(`${REST}/x_accounts?user_id=eq.${userId}&select=handle,checked_at&order=checked_at.asc.nullsfirst&limit=1`, { headers: svc }).then((r) => r.json());
+  if (!accts.length) return { status: 200, body: { ok: true, mode: "free", inserted: 0 } };
+  const handle = accts[0].handle;
+  await fetch(`${REST}/x_accounts?user_id=eq.${userId}&handle=eq.${handle}`, {
+    method: "PATCH", headers: { ...svc, Prefer: "return=minimal" }, body: JSON.stringify({ checked_at: new Date().toISOString() }),
+  });
+  try {
+    const { tweets, remaining, reset } = await syndication(handle);
+    const inserted = await storePosts(freshRows(userId, tweets));
+    // Leave headroom: the IP is shared, so stop before X has to tell us to.
+    const backoff = remaining <= 2 && reset && reset.getTime() > Date.now() ? reset : null;
+    await setBackoff(userId, backoff, null);
+    return { status: 200, body: { ok: true, mode: "free", checked: handle, inserted, backoff_until: backoff?.toISOString() ?? null } };
+  } catch (e) {
+    if (e instanceof RateLimited) {
+      await setBackoff(userId, e.until, "X rate limit");
+      return { status: 200, body: { ok: true, mode: "free", skipped: true, backoff_until: e.until.toISOString() } };
+    }
+    const msg = e instanceof Error ? e.message : String(e);
+    await setBackoff(userId, null, msg);
+    return { status: 502, body: { error: msg, mode: "free" } };
+  }
+}
+
 // ---------- add ----------
 async function addAccount(userId: string, rawHandle: unknown) {
   const handle = String(rawHandle ?? "").trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, "").split(/[/?#]/)[0].toLowerCase();
@@ -157,9 +278,15 @@ async function addAccount(userId: string, rawHandle: unknown) {
   if (existing.length >= MAX_ACCOUNTS) return { status: 400, body: { error: `You can track up to ${MAX_ACCOUNTS} accounts` } };
 
   await ensureState(userId);
-  const info = await tapi("/twitter/user/info", { userName: handle });
-  const u = info?.data;
-  if (info?.status === "error" || !u?.userName) return { status: 404, body: { error: `@${handle} was not found on X` } };
+  let u: any;
+  if (FREE) {
+    u = await freeProfile(handle);
+    if (!u) return { status: 404, body: { error: `@${handle} was not found on X` } };
+  } else {
+    const info = await tapi("/twitter/user/info", { userName: handle });
+    u = info?.data;
+    if (info?.status === "error" || !u?.userName) return { status: 404, body: { error: `@${handle} was not found on X` } };
+  }
   if (u.unavailable) return { status: 404, body: { error: `@${handle} is unavailable (${clean(u.unavailableReason || "suspended?", 40)})` } };
   if (u.protected) return { status: 400, body: { error: `@${handle} is a private account; its posts cannot be tracked` } };
 
@@ -176,6 +303,20 @@ async function addAccount(userId: string, rawHandle: unknown) {
 
   // Seed the feed with their latest page so the panel is not empty. This does
   // not move the poll cursor, so nobody else's posts get skipped.
+  if (FREE) {
+    let seeded = 0, note: string | null = null;
+    try {
+      const { tweets } = await syndication(account.handle);
+      seeded = await storePosts(freshRows(userId, tweets));
+      await fetch(`${REST}/x_accounts?user_id=eq.${userId}&handle=eq.${account.handle}`, {
+        method: "PATCH", headers: { ...svc, Prefer: "return=minimal" }, body: JSON.stringify({ checked_at: new Date().toISOString() }),
+      });
+    } catch (e) {
+      note = e instanceof RateLimited ? "X is rate limiting right now; posts will load shortly" : null;
+    }
+    return { status: 201, body: { ok: true, mode: "free", account: { ...account, user_id: undefined }, seeded, note } };
+  }
+
   let seeded = 0, credits = 18;
   try {
     await sleep(5200);      // free keys: 1 request per 5s
@@ -204,13 +345,14 @@ function chunkQueries(handles: string[], sinceClause: string): string[] {
 async function poll(userId: string) {
   await ensureState(userId);
   // Atomic throttle: only one caller per gap wins the PATCH.
-  const cutoff = new Date(Date.now() - MIN_GAP_S * 1000).toISOString();
+  const cutoff = new Date(Date.now() - (FREE ? FREE_MIN_GAP_S : MIN_GAP_S) * 1000).toISOString();
   const claim = await fetch(`${REST}/x_poll_state?user_id=eq.${userId}&last_poll_at=lt.${encodeURIComponent(cutoff)}`, {
     method: "PATCH", headers: { ...svc, Prefer: "return=representation" },
     body: JSON.stringify({ last_poll_at: new Date().toISOString() }),
   }).then((r) => r.json());
-  if (!Array.isArray(claim) || !claim.length) return { status: 200, body: { ok: true, skipped: true } };
+  if (!Array.isArray(claim) || !claim.length) return { status: 200, body: { ok: true, mode: FREE ? "free" : "paid", skipped: true } };
   const state = claim[0];
+  if (FREE) return await freePoll(userId, state);
 
   const accounts = await fetch(`${REST}/x_accounts?user_id=eq.${userId}&select=handle`, { headers: svc }).then((r) => r.json());
   const handles: string[] = accounts.map((a: any) => a.handle);
@@ -264,7 +406,7 @@ async function poll(userId: string) {
   await addCredits(userId, credits, extra);
 
   if (error) return { status: error.includes("out of credits") ? 402 : 502, body: { error, inserted } };
-  return { status: 200, body: { ok: true, inserted, credits: Number(state.credits) + credits } };
+  return { status: 200, body: { ok: true, mode: "paid", inserted, credits: Number(state.credits) + credits } };
 }
 
 Deno.serve(async (req) => {
@@ -273,7 +415,6 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers });
   if (req.method !== "POST") return reply(405, { error: "POST only" });
   if (!SERVICE_KEY) return reply(503, { error: "xtrack is missing its service key" });
-  if (!API_KEY) return reply(503, { error: "Set the TWITTERAPI_KEY secret to start tracking" });
 
   const userId = await callerId(req);
   if (!userId) return reply(401, { error: "Sign in to the dashboard first" });
